@@ -46,6 +46,8 @@ namespace Autofac.Integration.Wcf
     /// </remarks>
     public class AutofacInstanceContext : IExtension<InstanceContext>, IDisposable, IComponentContext
     {
+        public static object Tag { get; set; }
+
         private bool _disposed;
 
         /// <summary>
@@ -103,7 +105,15 @@ namespace Autofac.Integration.Wcf
             {
                 throw new ArgumentNullException("container");
             }
-            this.OperationLifetime = container.BeginLifetimeScope();
+
+            if (Tag == null)
+            {
+                this.OperationLifetime = container.BeginLifetimeScope();
+            }
+            else
+            {
+                this.OperationLifetime = container.BeginLifetimeScope(Tag);
+            }
         }
 
         /// <summary>
